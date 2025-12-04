@@ -106,13 +106,14 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- @auth -->
+               
                 <button class="hidden md:flex bg-wood-800 text-wood-50 px-6 py-2.5 rounded-full font-bold text-sm hover:bg-wood-900 transition-all shadow-md items-center gap-2">
-                    <i data-lucide="user" class="w-4 h-4"></i> Minha Conta
+                    <i data-lucide="user" class="w-4 h-4"></i> 
+                    <a href="{{ route('register') }}">Minha Conta</a>
                 </button>
-                <!-- @else -->
-                <!-- <a href="{{ route('login') }}">Entrar</a> -->
-                <!-- @endauth -->
+               
+                <a href="{{ route('login') }}">Entrar</a> 
+                
                 
                 <button class="md:hidden p-2 text-wood-800">
                     <i data-lucide="menu" class="w-6 h-6"></i>
