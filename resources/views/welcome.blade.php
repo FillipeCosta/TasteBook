@@ -403,7 +403,7 @@
                                 </div>
 
                                 <button class="mt-8 w-full bg-wood-800 hover:bg-wood-900 text-white py-4 rounded-xl font-bold shadow-lg transition-transform hover:scale-[1.01]">
-                                    Salvar nos Favoritos
+                                    Salvar nos Favoritos s
                                 </button>
                             </div>
                         </div>
