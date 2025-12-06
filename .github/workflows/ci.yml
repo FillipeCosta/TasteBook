@@ -1,0 +1,72 @@
+name: TasteBook CI
+
+# Quando este workflow deve rodar?
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest # Roda numa máquina Linux virtual do GitHub
+
+    steps:
+    # 1. Baixa o seu código para a máquina virtual
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    # 2. Configura o PHP na versão correta
+    - name: Configurar PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4.10' # Ajuste conforme sua versão local (8.2, 8.3, etc)
+        extensions: mbstring, xml, bcmath, sqlite3
+        coverage: none
+
+    # 3. Gerencia o cache do Composer (para o build ser rápido)
+    - name: Cache dos pacotes Composer
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    # 4. Instala as dependências do projeto
+    - name: Instalar Dependências
+      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+    # 5. Prepara o arquivo .env para teste
+    - name: Configurar Arquivo .env
+      run: |
+        cp .env.example .env
+        php artisan key:generate
+
+    # 6. Cria um banco de dados SQLite temporário para os testes
+    - name: Criar Banco de Dados SQLite
+      run: |
+        touch database/database.sqlite
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+
+    # --- AQUI COMEÇAM AS FERRAMENTAS QUE CONFIGURAMOS ---
+
+    # 7. Verifica Estilo de Código (Pint)
+    # Usamos --test para ele falhar se o código estiver feio, sem tentar corrigir
+    - name: Verificar Estilo (Pint)
+      run: ./vendor/bin/pint --test
+
+    # 8. Análise Estática (Larastan)
+    - name: Análise Estática (Larastan)
+      run: ./vendor/bin/phpstan analyse --memory-limit=2G
+
+    # 9. Testes Automatizados (Pest)
+    # Forçamos o uso do SQLite via variáveis de ambiente
+    - name: Rodar Testes (Pest)
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+      run: ./vendor/bin/pest
