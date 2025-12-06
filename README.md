@@ -1,3 +1,4 @@
+![TasteBook CI](https://github.com/fillipe.monteiro/tastebook/actions/workflows/ci.yml/badge.svg)
 
 ## 🎨 Padronização de Código (Laravel Pint)
 
