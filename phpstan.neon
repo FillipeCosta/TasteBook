@@ -1,0 +1,18 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - app/
+
+    # Nível de rigor: 0 é o mais leve, 9 é o mais estrito.
+    # O nível 5 é o ideal para começar projetos novos.
+    level: 5
+
+    # Ignorar erros comuns (opcional, mas útil no início)
+#    ignoreErrors:
+#        - '#PHPDoc tag @var#'
+#
+#    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
